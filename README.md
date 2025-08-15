@@ -1,16 +1,24 @@
-# RingStats 🥊
+# ProStats Wrestling Platform 🥊📰
 
-A modern web application for wrestling statistics, featuring clean UI and comprehensive wrestler profiles with side-by-side comparisons.
+A comprehensive wrestling platform combining **wrestling statistics** and **wrestling news** in one unified application.
 
 ## 🎯 Features
 
+### Wrestling Statistics
 - **Side-by-side wrestler comparison** with interactive cards
-- **Detailed wrestler profiles** with complete statistics
+- **Detailed wrestler profiles** with complete statistics from Cagematch.net
 - **Search functionality** with real-time results
-- **Responsive design** for mobile, tablet, and desktop
+- **Accurate database** with 34+ top wrestlers and real data
 - **Momentum scoring system** out of 15 points
 - **Recent match tracking** with win/loss/draw badges
 - **Career statistics** and championship history
+
+### Wrestling News
+- **Real-time wrestling news** aggregation
+- **Credibility scoring** system
+- **User voting** on articles
+- **RSS feed integration**
+- **Admin panel** for content management
 
 ## 🚀 Tech Stack
 
@@ -19,12 +27,15 @@ A modern web application for wrestling statistics, featuring clean UI and compre
 - **Tailwind CSS** for styling
 - **React Router** for navigation
 - **Inter font** for clean typography
+- **Glass morphism** design elements
 
 ### Backend
-- **Node.js** with Express.js
+- **Python Flask** for wrestling statistics API
+- **Python FastAPI** for wrestling news API
+- **SQLAlchemy** with SQLite/PostgreSQL support
+- **JWT authentication**
 - **CORS** enabled for cross-origin requests
 - **RESTful API** design
-- **Environment-based configuration**
 
 ## 📁 Project Structure
 
@@ -33,38 +44,31 @@ prostats/
 ├── frontend/                 # React frontend application
 │   ├── src/
 │   │   ├── components/      # Reusable UI components
-│   │   │   ├── Navbar.tsx
-│   │   │   └── WrestlerCard.tsx
 │   │   ├── pages/          # Page components
-│   │   │   ├── Homepage.tsx
-│   │   │   └── WrestlerProfile.tsx
 │   │   ├── types/          # TypeScript interfaces
-│   │   │   └── index.ts
-│   │   ├── data/           # Sample data
-│   │   │   └── sampleData.ts
-│   │   └── App.tsx
+│   │   ├── services/       # API services
+│   │   └── hooks/          # Custom React hooks
 │   ├── public/
 │   └── package.json
-└── backend/                 # Node.js backend API
-    ├── routes/             # API route handlers
-    │   └── wrestlers.js
-    ├── data/              # Data storage
-    │   └── wrestlers.js
-    ├── server.js          # Main server file
-    ├── .env              # Environment variables
-    └── package.json
+├── backend/                 # Python backend APIs
+│   ├── wrestling_api.py    # Flask API for wrestler stats
+│   ├── app/                # FastAPI news application
+│   ├── data/               # Wrestling database files
+│   └── requirements.txt
+└── README.md
 ```
 
 ## 🛠 Installation & Setup
 
 ### Prerequisites
+- Python 3.8+
 - Node.js (v16 or higher)
 - npm or yarn
 
 ### 1. Clone the Repository
 ```bash
-git clone <repository-url>
-cd prostats
+git clone https://github.com/JesseRod329/wrestling-news-app.git
+cd wrestling-news-app
 ```
 
 ### 2. Setup Frontend
@@ -78,56 +82,40 @@ The frontend will run on http://localhost:3000
 ### 3. Setup Backend
 ```bash
 cd backend
-npm install
-npm run dev
+pip install -r requirements.txt
+
+# Start wrestling statistics API
+python wrestling_api.py
+
+# Start wrestling news API (in another terminal)
+cd app
+uvicorn main:app --reload --port 8000
 ```
-The backend API will run on http://localhost:5000
 
 ## 🔌 API Endpoints
 
-### Wrestlers
-- `GET /api/wrestlers` - Get all wrestlers (supports ?search and ?limit query params)
-- `GET /api/wrestlers/:id` - Get specific wrestler by ID
-- `GET /api/wrestlers/:id/matches` - Get wrestler's match history
-- `GET /api/wrestlers/:id/stats` - Get wrestler's career statistics
-
-### Health Check
+### Wrestling Statistics API (Flask - Port 5001)
 - `GET /api/health` - API health status
+- `GET /api/wrestlers` - Get all wrestlers
+- `GET /api/wrestlers/:id` - Get specific wrestler by ID
+- `GET /api/stats` - Get database statistics
 
-### Example API Response
-```json
-{
-  "success": true,
-  "count": 3,
-  "data": [
-    {
-      "id": "john-cena",
-      "name": "John Cena",
-      "nickname": "The Cenation Leader",
-      "momentumScore": 11,
-      "careerStats": {
-        "totalMatches": 2847,
-        "wins": 1892,
-        "losses": 832,
-        "draws": 123,
-        "winPercentage": 66.4
-      }
-    }
-  ]
-}
-```
+### Wrestling News API (FastAPI - Port 8000)
+- `GET /docs` - Interactive API documentation
+- `POST /auth/register` - User registration
+- `POST /auth/login` - User authentication
+- `GET /articles` - Get news articles
+- `POST /vote` - Vote on articles
+- `POST /admin/ingest` - Trigger news ingestion
 
 ## 🎨 Design Features
 
-- **Apple-inspired UI** with clean typography
-- **Frosted glass effects** on navigation
-- **Hover animations** and smooth transitions
-- **Color-coded momentum scoring**:
-  - 🟢 Green (12-15): High momentum
-  - 🟡 Yellow (8-11): Medium momentum  
-  - 🔴 Red (0-7): Low momentum
-- **Responsive grid layouts**
-- **Interactive cards** with hover effects
+- **Modern UI** with glass morphism effects
+- **Responsive design** for all devices
+- **Interactive wrestler cards** with hover animations
+- **News feed** with credibility scoring
+- **Color-coded momentum scoring** system
+- **Smooth transitions** and animations
 
 ## 🔧 Development
 
@@ -139,36 +127,65 @@ The backend API will run on http://localhost:5000
 - `npm test` - Run tests
 
 **Backend:**
-- `npm run dev` - Start with nodemon (auto-restart)
-- `npm start` - Start production server
+- `python wrestling_api.py` - Start wrestling stats API
+- `uvicorn app.main:app --reload` - Start news API with auto-reload
 
 ### Environment Variables
 Create a `.env` file in the backend directory:
 ```env
-PORT=5000
-NODE_ENV=development
-CORS_ORIGIN=http://localhost:3000
+APP_DATABASE_URL=sqlite:///./dev.db
+APP_JWT_SECRET_KEY=your-secret-key
+APP_ENVIRONMENT=development
 ```
+
+## 📊 Database
+
+### Wrestling Statistics
+- **34+ top wrestlers** with accurate data from Cagematch.net
+- **Real ages, promotions, and career information**
+- **Social media links and ratings**
+- **Comprehensive wrestling statistics**
+
+### News Database
+- **SQLite** for development
+- **PostgreSQL** ready for production
+- **User authentication and voting system**
+- **Credibility scoring algorithm**
+
+## 🚀 Quick Start
+
+1. **Start the wrestling statistics API:**
+   ```bash
+   cd backend
+   python wrestling_api.py
+   ```
+
+2. **Start the wrestling news API:**
+   ```bash
+   cd backend/app
+   uvicorn main:app --reload --port 8000
+   ```
+
+3. **Start the React frontend:**
+   ```bash
+   cd frontend
+   npm start
+   ```
+
+4. **Access the application:**
+   - Frontend: http://localhost:3000
+   - Wrestling Stats API: http://localhost:5001
+   - News API Docs: http://localhost:8000/docs
 
 ## 📋 Future Features
 
-### Planned Enhancements
-- [ ] Database integration (PostgreSQL)
-- [ ] User authentication and profiles
-- [ ] Favorite wrestler bookmarking
-- [ ] Dark/Light mode toggle
-- [ ] Advanced filtering and sorting
-- [ ] Match rating system
-- [ ] Win-loss streak tracking
-- [ ] PPV-only match filtering
-- [ ] Hot streak indicators
-- [ ] Admin panel for data management
-
-### Potential Integrations
-- [ ] Real data scraping from cagematch.net
-- [ ] Social media integration
-- [ ] Push notifications for match results
+- [ ] User authentication for wrestling stats
+- [ ] Advanced wrestler filtering and sorting
+- [ ] Match prediction system
 - [ ] Fantasy wrestling leagues
+- [ ] Real-time match updates
+- [ ] Social media integration
+- [ ] Mobile app development
 
 ## 🤝 Contributing
 
@@ -184,6 +201,6 @@ This project is licensed under the ISC License.
 
 ## 🙏 Acknowledgments
 
-- Wrestling data inspired by WWE and AEW
-- Images from Unsplash
-- Design inspiration from ESPN and Apple Human Interface Guidelines 
+- Wrestling data from Cagematch.net
+- Design inspiration from ESPN and Apple Human Interface Guidelines
+- News aggregation and credibility scoring algorithms

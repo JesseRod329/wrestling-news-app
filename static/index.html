@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Real Wrestling News</title>
+    <style>
+      body { 
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+        margin: 0; 
+        background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%); 
+        color: #e6e8eb;
+        min-height: 100vh;
+      }
+      .navbar { 
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(15, 20, 25, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 1000;
+        padding: 0;
+      }
+      
+      .navbar-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 16px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      
+      .navbar-brand strong {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #fff;
+      }
+      
+      .status-indicator {
+        opacity: 0.7;
+        font-size: 0.9rem;
+      }
+      
+      .navbar-nav {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+      
+      .nav-link {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        padding: 8px 16px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+      }
+      
+      .nav-link:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+      }
+      main { 
+        max-width: 800px; 
+        margin: 0 auto; 
+        padding: 100px 20px 40px; /* Top padding for fixed navbar */
+      }
+      
+      /* Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        z-index: 2000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      .modal.show {
+        display: flex;
+        opacity: 1;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .modal-content {
+        background: rgba(20, 25, 30, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        width: 90%;
+        max-width: 400px;
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+      
+      .modal.show .modal-content {
+        transform: translateY(0);
+      }
+      
+      .modal-header {
+        padding: 24px 24px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .modal-header h2 {
+        margin: 0;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #fff;
+      }
+      
+      .modal-close {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: color 0.2s ease;
+      }
+      
+      .modal-close:hover {
+        color: #fff;
+      }
+      
+      .modal-body {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      
+      .modal-body input {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 14px 16px;
+        color: #fff;
+        font-size: 1rem;
+      }
+      
+      .btn-primary {
+        background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        border: none;
+        border-radius: 12px;
+        padding: 14px 24px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 8px;
+      }
+      
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+      }
+      
+      .modal-footer-text {
+        text-align: center;
+        margin: 16px 0 0;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+      }
+      
+      .modal-footer-text a {
+        color: #60a5fa;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      
+      .modal-footer-text a:hover {
+        text-decoration: underline;
+      }
+      
+      .card { 
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        padding: 0;
+        margin: 24px 0;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        animation: fadeInUp 0.6s ease forwards;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+      }
+      
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+      }
+      
+      .article-banner {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        display: block;
+      }
+      
+      .article-banner-placeholder {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255,255,255,0.4);
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+      
+      .article-content {
+        padding: 20px;
+      }
+      
+      .article-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+        gap: 16px;
+      }
+      
+      .article-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #fff;
+        margin: 0;
+        line-height: 1.3;
+        flex: 1;
+      }
+      
+      .article-title:hover {
+        color: #60a5fa;
+        cursor: pointer;
+      }
+      
+      .article-source {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin: 8px 0 12px;
+        font-weight: 500;
+      }
+      
+      .article-snippet {
+        color: rgba(255, 255, 255, 0.8);
+        margin: 0 0 16px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+      
+      .tag { 
+        padding: 6px 14px; 
+        border-radius: 999px; 
+        font-size: 0.8rem; 
+        font-weight: 600;
+        border: none;
+        display: inline-block;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        flex-shrink: 0;
+      }
+      .tag.Confirmed { 
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+      }
+      .tag.Pending { 
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+      }
+      .tag.Rumor { 
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); 
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+      }
+      
+      button { 
+        background: rgba(255, 255, 255, 0.1); 
+        color: #e6e8eb; 
+        border: 1px solid rgba(255, 255, 255, 0.2); 
+        padding: 8px 12px; 
+        border-radius: 10px; 
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        backdrop-filter: blur(10px);
+      }
+      button:hover { 
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-1px);
+      }
+      
+      input, select { 
+        background: rgba(255, 255, 255, 0.08); 
+        color: #e6e8eb; 
+        border: 1px solid rgba(255, 255, 255, 0.15); 
+        padding: 10px 14px; 
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        transition: all 0.2s ease;
+      }
+      input:focus, select:focus {
+        outline: none;
+        border-color: rgba(59, 130, 246, 0.5);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+      
+      .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+      .controls { background: rgba(255, 255, 255, 0.05); padding: 16px; border-radius: 16px; margin-bottom: 24px; }
+      
+      a { color: #60a5fa; text-decoration: none; transition: color 0.2s ease; }
+      a:hover { color: #93c5fd; text-decoration: underline; }
+      
+      .vote-controls {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      
+      .vote-controls button {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+        min-width: 50px;
+      }
+      
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @media (max-width: 768px) {
+        .article-layout {
+          flex-direction: column;
+        }
+        .article-thumbnail {
+          width: 100%;
+          height: 180px;
+        }
+        .row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="navbar-content">
+        <div class="navbar-brand">
+          <strong>Real Wrestling News</strong>
+          <span id="status" class="status-indicator"></span>
+        </div>
+        <nav class="navbar-nav">
+          <div id="authButtons" class="auth-buttons">
+            <button id="loginBtn" class="nav-link">Login</button>
+            <button id="registerBtn" class="nav-link">Register</button>
+          </div>
+          <div id="userMenu" class="user-menu" style="display: none;">
+            <button id="favoritesBtn" class="nav-link">My Favorites</button>
+            <button id="logoutBtn" class="nav-link">Logout</button>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Login to Real Wrestling News</h2>
+          <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <input id="loginEmail" placeholder="Email address" type="email" />
+          <input id="loginPassword" placeholder="Password" type="password" />
+          <button id="loginSubmit" class="btn-primary">Login</button>
+          <p class="modal-footer-text">
+            Don't have an account? 
+            <a href="#" onclick="switchModal('loginModal', 'registerModal')">Sign up</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Join Real Wrestling News</h2>
+          <button class="modal-close" onclick="closeModal('registerModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <input id="registerEmail" placeholder="Email address" type="email" />
+          <input id="registerPassword" placeholder="Password" type="password" />
+          <button id="registerSubmit" class="btn-primary">Create Account</button>
+          <p class="modal-footer-text">
+            Already have an account? 
+            <a href="#" onclick="switchModal('registerModal', 'loginModal')">Sign in</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <main>
+      <div class="controls">
+        <div class="row">
+          <input id="search" placeholder="Search articles..." style="flex:1" />
+          <select id="filterSource"><option value="">All Sources</option></select>
+          <select id="sort"><option value="latest">Latest</option><option value="top_week">Top Voted: Weekly</option><option value="top_all">Top Voted: All Time</option></select>
+          <button id="refreshBtn">Refresh</button>
+        </div>
+      </div>
+      <div id="feed"></div>
+    </main>
+    <script>
+      const api = location.origin.replace(/\/$/, '');
+      let token = localStorage.getItem('token') || '';
+      const statusEl = document.getElementById('status');
+      const feedEl = document.getElementById('feed');
+      const searchEl = document.getElementById('search');
+      const sourceEl = document.getElementById('filterSource');
+      const sortEl = document.getElementById('sort');
+
+      function setStatus(msg){ statusEl.textContent = msg }
+
+      async function auth(path, body){
+        const isLogin = path.includes('login');
+        const res = await fetch(api + '/auth/' + path, {
+          method:'POST',
+          headers: isLogin ? { 'Content-Type':'application/x-www-form-urlencoded' } : { 'Content-Type':'application/json' },
+          body: isLogin ? new URLSearchParams({ username: body.email, password: body.password }) : JSON.stringify(body)
+        });
+        if(!res.ok) throw new Error(await res.text());
+        return res.json();
+      }
+
+      async function apiGet(path, params={}){
+        const qs = new URLSearchParams(params).toString();
+        const res = await fetch(api + path + (qs? ('?' + qs):''), {
+          headers: token ? { Authorization: 'Bearer ' + token } : {}
+        });
+        if(!res.ok) throw new Error(await res.text());
+        return res.json();
+      }
+
+      async function apiPost(path, body){
+        const res = await fetch(api + path, {
+          method:'POST',
+          headers: { 'Content-Type':'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
+          body: JSON.stringify(body)
+        });
+        if(!res.ok) throw new Error(await res.text());
+        return res.json();
+      }
+
+      function shouldHide(title){
+        const ban = ["ADD TO CART","PREORDER YOUR COPY NOW","CLICK HERE FOR THE 2025 PWI 500 SUBMISSION LINK"];
+        const t = (title||'').toUpperCase();
+        return ban.some(x => t.includes(x));
+      }
+
+      function articleCard(a){
+        const el = document.createElement('div');
+        el.className = 'card';
+        
+        // Create banner image or placeholder
+        const banner = a.thumbnail_url ? 
+          `<img class="article-banner" src="${a.thumbnail_url}" onerror="this.outerHTML='<div class=\\'article-banner-placeholder\\'>Wrestling News</div>'" alt="${a.title}" />` : 
+          `<div class="article-banner-placeholder">Wrestling News</div>`;
+        
+        el.innerHTML = `
+          ${banner}
+          <div class="article-content">
+            <div class="article-header">
+              <a href="#" data-article-id="${a.id}" class="title-link article-title">${a.title}</a>
+              <span class="tag ${a.credibility_tag}">${a.credibility_tag}</span>
+            </div>
+            <div class="article-source">${a.source_name || 'Unknown Source'}</div>
+            <div class="article-snippet">${a.content_snippet || ''}</div>
+            <div class="vote-controls">
+              <button data-dir="up">👍 ${a.upvotes}</button>
+              <button data-dir="down">👎 ${a.downvotes}</button>
+            </div>
+          </div>
+        `;
+        el.querySelectorAll('button').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            if(!token){ alert('Login first'); return }
+            const out = await apiPost('/vote', { article_id: a.id, direction: btn.dataset.dir });
+            a.upvotes = out.upvotes; a.downvotes = out.downvotes; a.credibility_score = out.credibility_score; a.credibility_tag = out.credibility_tag;
+            el.querySelector('.tag').textContent = a.credibility_tag;
+            el.querySelector('.tag').className = 'tag ' + a.credibility_tag;
+            el.querySelectorAll('button')[0].textContent = '👍 ' + a.upvotes;
+            el.querySelectorAll('button')[1].textContent = '👎 ' + a.downvotes;
+          })
+        })
+        const titleLink = el.querySelector('.title-link');
+        titleLink.addEventListener('click', async (e) => {
+          e.preventDefault();
+          window.location.href = '/static/index.html#article-' + a.id;
+          await renderDetail(a.id);
+        });
+        return el;
+      }
+
+      async function populateSources(){
+        const sources = await apiGet('/admin/sources');
+        sourceEl.innerHTML = '<option value="">All Sources</option>' + sources.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+      }
+
+      async function load(){
+        setStatus('Loading...');
+        const params = {};
+        const q = searchEl.value.trim(); if (q) params.q = q;
+        const sid = sourceEl.value.trim(); if (sid) params.source_id = sid;
+        const sort = sortEl.value; if (sort && sort !== 'latest') params.sort = sort;
+        const data = await apiGet('/articles', params);
+        
+        // Sort by latest first (published_at or created_at)
+        const sorted = [...data].sort((a, b) => {
+          const dateA = new Date(a.published_at || a.created_at);
+          const dateB = new Date(b.published_at || b.created_at);
+          return dateB - dateA; // Latest first
+        });
+        
+        feedEl.innerHTML = '';
+        sorted.filter(a => !shouldHide(a.title)).forEach((a, index) => {
+          const card = articleCard(a);
+          // Stagger animations for a nice effect
+          card.style.animationDelay = `${index * 0.1}s`;
+          feedEl.appendChild(card);
+        });
+        setStatus('');
+      }
+
+      async function renderDetail(id){
+        const container = document.createElement('div');
+        container.className = 'card';
+        const art = await apiGet('/articles/' + id);
+        const img = art.thumbnail_url ? 
+          `<img src="${art.thumbnail_url}" onerror="this.style.display='none'" style="width:100%;max-height:320px;object-fit:cover;border-radius:16px;margin:16px 0"/>` : 
+          '';
+        container.innerHTML = `
+          <div style="margin-bottom: 16px;">
+            <button onclick="history.back()" style="margin-bottom: 16px;">← Back to Feed</button>
+          </div>
+          <h1 class="article-title" style="font-size: 1.5rem; margin: 0 0 16px 0;">${art.title}</h1>
+          <div class="article-source" style="margin-bottom: 16px;">Source: ${art.source_name || 'Unknown'}</div>
+          ${img}
+          <div class="article-snippet" style="font-size: 1rem; line-height: 1.6; margin: 16px 0;">${art.content_snippet || ''}</div>
+          <a href="${art.canonical_url}" target="_blank" style="display: inline-block; padding: 12px 24px; background: rgba(96, 165, 250, 0.2); border: 1px solid rgba(96, 165, 250, 0.4); border-radius: 12px; color: #60a5fa; text-decoration: none; font-weight: 500;">
+            Read Full Article →
+          </a>
+        `;
+        feedEl.innerHTML = '';
+        feedEl.appendChild(container);
+      }
+
+      // Modal functions
+      function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('show'), 10);
+      }
+      
+      function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.remove('show');
+        setTimeout(() => modal.style.display = 'none', 300);
+      }
+      
+      function switchModal(fromModal, toModal) {
+        closeModal(fromModal);
+        setTimeout(() => openModal(toModal), 300);
+      }
+      
+      function updateAuthState() {
+        const authButtons = document.getElementById('authButtons');
+        const userMenu = document.getElementById('userMenu');
+        
+        if (token) {
+          authButtons.style.display = 'none';
+          userMenu.style.display = 'flex';
+        } else {
+          authButtons.style.display = 'flex';
+          userMenu.style.display = 'none';
+        }
+      }
+
+      // Modal event handlers
+      document.getElementById('loginBtn').onclick = () => openModal('loginModal');
+      document.getElementById('registerBtn').onclick = () => openModal('registerModal');
+      
+      document.getElementById('loginSubmit').onclick = async () => {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        if (!email || !password) { alert('Please enter email and password'); return; }
+        try {
+          const { access_token } = await auth('login', { email, password });
+          token = access_token; localStorage.setItem('token', token);
+          setStatus('Welcome back!');
+          closeModal('loginModal');
+          updateAuthState();
+        } catch(e){ alert('Login failed: ' + e.message); }
+      };
+
+      document.getElementById('registerSubmit').onclick = async () => {
+        const email = document.getElementById('registerEmail').value.trim();
+        const password = document.getElementById('registerPassword').value;
+        if (!email || !password) { alert('Please enter email and password'); return; }
+        try { 
+          await auth('register', { email, password }); 
+          setStatus('Account created! Please login.');
+          switchModal('registerModal', 'loginModal');
+        }
+        catch(e){ alert('Registration failed: ' + e.message); }
+      };
+      
+      document.getElementById('logoutBtn').onclick = () => {
+        token = '';
+        localStorage.removeItem('token');
+        setStatus('Logged out');
+        updateAuthState();
+      };
+      
+      // Close modals when clicking outside
+      document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            closeModal(modal.id);
+          }
+        });
+      });
+
+      document.getElementById('refreshBtn').onclick = load;
+      searchEl.oninput = (e)=>{ if(e.target.value.length===0) load(); };
+      sourceEl.onchange = load;
+      sortEl.onchange = load;
+      
+      // Initialize auth state and load content
+      updateAuthState();
+      populateSources().then(()=>load());
+
+      if (location.hash.startsWith('#article-')){
+        const id = location.hash.replace('#article-','');
+        renderDetail(id);
+      }
+    </script>
+  </body>
+  </html>
+
+
