@@ -13,15 +13,15 @@ try:
     
     print("🏆 Starting Ultimate Wrestling Platform (Simplified)...")
     print("📊 Features: Wrestling Statistics")
-    print("🌐 API Documentation: http://localhost:8002/docs")
+    print("🌐 API Documentation: http://localhost:5001/docs")
     print("📈 Stats Endpoints: /stats/*")
     print("🔍 Health Check: /health")
     
-    # Start the integrated FastAPI application
+    # Start the integrated FastAPI application - change to port 5001
     uvicorn.run(
         app,
         host="0.0.0.0",
-        port=8002,
+        port=5001,  # Changed from 8002 to 5001
         reload=False,
         log_level="info"
     )

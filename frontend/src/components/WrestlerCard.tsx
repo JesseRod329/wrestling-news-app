@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Wrestler } from '../types';
 import EnhancedImageDisplay from './EnhancedImageDisplay';
+import useFavorites from '../hooks/useFavorites';
 
 interface WrestlerCardProps {
   wrestler: Wrestler;
@@ -11,6 +12,9 @@ interface WrestlerCardProps {
 const WrestlerCard: React.FC<WrestlerCardProps> = ({ wrestler, className = '' }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const { favorites, addFavorite, removeFavorite } = useFavorites();
+
+  const isFavorite = favorites.some(fav => fav.id === wrestler.id);
 
   const handleImageLoad = () => {
     setImageLoaded(true);
@@ -18,6 +22,17 @@ const WrestlerCard: React.FC<WrestlerCardProps> = ({ wrestler, className = '' })
 
   const handleImageError = () => {
     setImageLoaded(false);
+  };
+
+  const handleFavoriteToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (isFavorite) {
+      removeFavorite(wrestler.id);
+    } else {
+      addFavorite(wrestler);
+    }
   };
 
   return (
@@ -82,10 +97,21 @@ const WrestlerCard: React.FC<WrestlerCardProps> = ({ wrestler, className = '' })
 
         {/* Quick Stats Badge */}
         {wrestler.careerStats && wrestler.careerStats.totalMatches > 0 && (
-          <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full border border-white/20">
+          <div className="absolute top-3 right-16 bg-black/60 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full border border-white/20">
             {wrestler.careerStats.totalMatches} matches
           </div>
         )}
+
+        {/* Favorite Button */}
+        <button
+          onClick={handleFavoriteToggle}
+          className="absolute top-3 right-3 p-2 bg-black/60 backdrop-blur-sm hover:bg-purple-600/80 text-white rounded-full border border-white/20 hover:border-purple-400/50 transition-all duration-200 hover:scale-110 z-10"
+          title={isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+        >
+          <svg className="w-4 h-4" fill={isFavorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </button>
 
         {/* Rating Badge */}
         {wrestler.averageRating && (
@@ -165,14 +191,7 @@ const WrestlerCard: React.FC<WrestlerCardProps> = ({ wrestler, className = '' })
             View Profile
           </Link>
           
-          <button
-            className="p-2 bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white rounded-lg transition-colors duration-200 border border-white/20 hover:border-white/40"
-            title="Add to Favorites"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-          </button>
+          {/* The favorite button is now positioned absolutely */}
         </div>
 
         {/* Momentum Score Indicator */}

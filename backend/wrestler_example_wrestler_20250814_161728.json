@@ -1,0 +1,6 @@
+{
+  "name": "Example Wrestler",
+  "wrestler_id": "12345",
+  "profile_url": "https://www.cagematch.net/?id=2&nr=12345",
+  "stats_url": "https://www.cagematch.net/?id=2&nr=12345&view=matches",
+  "profile_data": 

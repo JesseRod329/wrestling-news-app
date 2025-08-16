@@ -1,0 +1,36 @@
+{
+  "name": "John Cena",
+  "search_results": [
+    {
+      "url": "https://en.wikipedia.org/wiki/John_Cena",
+      "title": "John Cena - Wikipedia",
+      "description": "John Felix Anthony Cena (/ˈsiːnə/ SEE-nə; born April 23, 1977) is an American actor and professional wrestler. As a wrestler, he has been signed to WWE since ..."
+    },
+    {
+      "url": "https://www.imdb.com/name/nm1078479/",
+      "title": "John Cena - IMDb",
+      "description": "John Felix Anthony Cena was born on April 23, 1977 in West Newbury, Massachusetts to Carol Cena and John Joseph Cena. He is of Italian (father) and ..."
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=zuIngym3lHQ",
+      "title": "John Cena Reveals Peacemaker Season 2 Surprises ... - YouTube",
+      "description": "John Cena talks about making a surprise cameo in Superman and trying to enjoy every moment of his WWE Farewell Tour after wrestling for ..."
+    },
+    {
+      "url": "https://www.instagram.com/johncena/?hl=en",
+      "title": "John Cena (@johncena) · West Newbury, MA - Instagram",
+      "description": "21M followers · 4.1K+ posts · Welcome to my Instagram. These images will be posted without explanation, for your interpretation. Enjoy."
+    },
+    {
+      "url": "https://www.wwe.com/superstars/john-cena",
+      "title": "John Cena | WWE",
+      "description": "He's a 17-time World Champion, New York Times best-selling author and record-setting Make-A-Wish granter. He's released a hit album, starred in blockbuster ..."
+    }
+  ],
+  "selected_result": {
+    "url": "https://en.wikipedia.org/wiki/John_Cena",
+    "title": "John Cena - Wikipedia",
+    "description": "John Felix Anthony Cena (/ˈsiːnə/ SEE-nə; born April 23, 1977) is an American actor and professional wrestler. As a wrestler, he has been signed to WWE since ..."
+  },
+  "scraped_at": "2025-08-14T16:17:24.059037"
+}

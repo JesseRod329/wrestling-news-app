@@ -1,5 +1,6 @@
 import React from 'react';
 import NewsFeed from '../components/NewsFeed';
+import FavoriteWrestlerIcons from '../components/FavoriteWrestlerIcons';
 
 const News: React.FC = () => {
   return (
@@ -23,6 +24,9 @@ const News: React.FC = () => {
       {/* News Content */}
       <div className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
+          {/* Favorite Wrestler Icons */}
+          <FavoriteWrestlerIcons className="mb-16" />
+
           {/* Featured News Section */}
           <section className="mb-16">
             <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
@@ -33,7 +37,7 @@ const News: React.FC = () => {
                 </p>
               </div>
               
-              <NewsFeed limit={3} showFilters={false} />
+              <NewsFeed />
             </div>
           </section>
 
@@ -47,7 +51,7 @@ const News: React.FC = () => {
                 </p>
               </div>
               
-              <NewsFeed showFilters={true} />
+              <NewsFeed />
             </div>
           </section>
 

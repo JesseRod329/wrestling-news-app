@@ -7,11 +7,14 @@ const useFavorites = () => {
   useEffect(() => {
     const storedFavorites = localStorage.getItem('favorites');
     if (storedFavorites) {
-      setFavorites(JSON.parse(storedFavorites));
+      const parsedFavorites = JSON.parse(storedFavorites);
+      console.log('Loaded favorites from localStorage:', parsedFavorites.map((f: Wrestler) => ({ id: f.id, name: f.name })));
+      setFavorites(parsedFavorites);
     }
   }, []);
 
   const addFavorite = (wrestler: Wrestler) => {
+    console.log('Adding wrestler to favorites:', wrestler.id, wrestler.name);
     const newFavorites = [...favorites, wrestler];
     setFavorites(newFavorites);
     localStorage.setItem('favorites', JSON.stringify(newFavorites));

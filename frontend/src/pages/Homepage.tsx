@@ -4,6 +4,7 @@ import SearchBar from '../components/SearchBar';
 import WrestlerCard from '../components/WrestlerCard';
 import NewsFeed from '../components/NewsFeed';
 import LoadingSpinner from '../components/LoadingSpinner';
+import FavoriteWrestlerIcons from '../components/FavoriteWrestlerIcons';
 import apiService from '../services/api';
 import { Wrestler, DatabaseStats } from '../types';
 
@@ -112,6 +113,9 @@ const Homepage: React.FC = () => {
       <div className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           
+          {/* Favorite Wrestler Icons - Only show when someone has favorites */}
+          <FavoriteWrestlerIcons className="animate-fade-in-up animation-delay-500" />
+          
           {/* News Section - Primary Focus */}
           <section className="mb-16 animate-fade-in-up animation-delay-600">
             <div className="flex items-center justify-between mb-8">
@@ -119,20 +123,31 @@ const Homepage: React.FC = () => {
                 <h2 className="text-3xl font-bold text-white mb-2">Latest Wrestling News</h2>
                 <p className="text-gray-400">Breaking stories, rumors, and updates from the wrestling world</p>
               </div>
-              <Link
-                to="/news"
-                className="group inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 transition-all duration-200 hover:scale-105"
-              >
-                View All News
-                <svg className="ml-2 -mr-1 w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </Link>
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => window.location.reload()}
+                  className="group inline-flex items-center px-4 py-2 border border-purple-500/30 text-sm font-medium rounded-md text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 transition-all duration-200 hover:scale-105"
+                >
+                  <svg className="w-4 h-4 mr-2 group-hover:rotate-180 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Refresh
+                </button>
+                <Link
+                  to="/news"
+                  className="group inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 transition-all duration-200 hover:scale-105"
+                >
+                  View All News
+                  <svg className="ml-2 -mr-1 w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </Link>
+              </div>
             </div>
             
             {/* News Feed - Enhanced Display */}
             <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-all duration-300">
-              <NewsFeed limit={6} showFilters={false} />
+              <NewsFeed />
             </div>
           </section>
 

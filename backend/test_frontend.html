@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wrestling API Test Frontend</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .api-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+        .wrestler-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .wrestler-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .rating-bar {
+            background: rgba(255, 255, 255, 0.2);
+            height: 20px;
+            border-radius: 10px;
+            margin: 5px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .rating-fill {
+            background: linear-gradient(90deg, #ff6b6b, #feca57);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        .btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+        }
+        .error {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏆 Wrestling Database API Test</h1>
+        <p>Testing the backend API with frontend integration</p>
+    </div>
+
+    <div class="api-section">
+        <h2>🔍 API Health Check</h2>
+        <button class="btn" onclick="checkHealth()">Check API Health</button>
+        <div id="health-result"></div>
+    </div>
+
+    <div class="api-section">
+        <h2>👥 Wrestlers Database</h2>
+        <button class="btn" onclick="getAllWrestlers()">Get All Wrestlers</button>
+        <button class="btn" onclick="getWrestlerById()">Get Cody Rhodes (ID: 3686)</button>
+        <button class="btn" onclick="searchWrestlers()">Search for "Cody"</button>
+        <button class="btn" onclick="getDatabaseStats()">Get Database Stats</button>
+        <div id="wrestlers-result"></div>
+    </div>
+
+    <div class="api-section">
+        <h2>📊 Wrestler Statistics</h2>
+        <button class="btn" onclick="getWrestlerStats()">Get Cody Rhodes Stats</button>
+        <div id="stats-result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5001/api';
+
+        async function makeRequest(endpoint, options = {}) {
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                return { error: error.message };
+            }
+        }
+
+        function displayResult(elementId, data, title = '') {
+            const element = document.getElementById(elementId);
+            if (data.error) {
+                element.innerHTML = `<div class="error">❌ Error: ${data.error}</div>`;
+                return;
+            }
+            
+            let html = title ? `<h3>${title}</h3>` : '';
+            html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            element.innerHTML = html;
+        }
+
+        async function checkHealth() {
+            const result = await makeRequest('/health');
+            displayResult('health-result', result, 'API Health Status');
+        }
+
+        async function getAllWrestlers() {
+            const result = await makeRequest('/wrestlers');
+            displayResult('wrestlers-result', result, 'All Wrestlers');
+        }
+
+        async function getWrestlerById() {
+            const result = await makeRequest('/wrestlers/3686');
+            displayResult('wrestlers-result', result, 'Cody Rhodes Profile');
+        }
+
+        async function searchWrestlers() {
+            const result = await makeRequest('/search?q=Cody');
+            displayResult('wrestlers-result', result, 'Search Results for "Cody"');
+        }
+
+        async function getDatabaseStats() {
+            const result = await makeRequest('/stats');
+            displayResult('wrestlers-result', result, 'Database Statistics');
+        }
+
+        async function getWrestlerStats() {
+            const result = await makeRequest('/wrestlers/3686/stats');
+            displayResult('stats-result', result, 'Cody Rhodes Statistics');
+        }
+
+        // Auto-check health on page load
+        window.onload = function() {
+            checkHealth();
+        };
+    </script>
+</body>
+</html>

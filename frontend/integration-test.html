@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integration Test - Backend + Frontend</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d1b1b 100%);
+            color: white;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success { background: rgba(34, 197, 94, 0.2); border: 1px solid rgba(34, 197, 94, 0.5); }
+        .error { background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.5); }
+        .loading { background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.5); }
+        .btn {
+            background: #e9242a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .btn:hover { background: #d11a1a; }
+        .data-display {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏆 Integration Test: Backend + Frontend</h1>
+        <p>Testing the complete wrestling database system</p>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 Backend API Tests</h2>
+        <button class="btn" onclick="testBackendHealth()">Test Backend Health</button>
+        <button class="btn" onclick="testWrestlersEndpoint()">Test Wrestlers Endpoint</button>
+        <button class="btn" onclick="testSearchEndpoint()">Test Search Endpoint</button>
+        <button class="btn" onclick="testStatsEndpoint()">Test Stats Endpoint</button>
+        <div id="backend-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🌐 Frontend Tests</h2>
+        <button class="btn" onclick="testFrontendAccess()">Test Frontend Access</button>
+        <button class="btn" onclick="testDataTransformation()">Test Data Transformation</button>
+        <div id="frontend-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 Integration Tests</h2>
+        <button class="btn" onclick="testCompleteFlow()">Test Complete Data Flow</button>
+        <button class="btn" onclick="testErrorHandling()">Test Error Handling</button>
+        <div id="integration-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 Live Data Display</h2>
+        <button class="btn" onclick="loadLiveData()">Load Live Data</button>
+        <div id="live-data"></div>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'http://localhost:5001/api';
+        const FRONTEND_URL = 'http://localhost:3000';
+
+        function displayResult(elementId, data, type = 'success') {
+            const element = document.getElementById(elementId);
+            const statusClass = type === 'success' ? 'success' : type === 'error' ? 'error' : 'loading';
+            
+            let html = `<div class="status ${statusClass}">`;
+            if (type === 'loading') {
+                html += '⏳ Loading...';
+            } else if (type === 'success') {
+                html += '✅ Success!';
+            } else {
+                html += '❌ Error!';
+            }
+            html += '</div>';
+            
+            if (data) {
+                html += `<div class="data-display">${JSON.stringify(data, null, 2)}</div>`;
+            }
+            
+            element.innerHTML = html;
+        }
+
+        async function testBackendHealth() {
+            try {
+                displayResult('backend-results', null, 'loading');
+                const response = await fetch(`${BACKEND_URL}/health`);
+                const data = await response.json();
+                displayResult('backend-results', data, 'success');
+            } catch (error) {
+                displayResult('backend-results', { error: error.message }, 'error');
+            }
+        }
+
+        async function testWrestlersEndpoint() {
+            try {
+                displayResult('backend-results', null, 'loading');
+                const response = await fetch(`${BACKEND_URL}/wrestlers`);
+                const data = await response.json();
+                displayResult('backend-results', data, 'success');
+            } catch (error) {
+                displayResult('backend-results', { error: error.message }, 'error');
+            }
+        }
+
+        async function testSearchEndpoint() {
+            try {
+                displayResult('backend-results', null, 'loading');
+                const response = await fetch(`${BACKEND_URL}/search?q=Cody`);
+                const data = await response.json();
+                displayResult('backend-results', data, 'success');
+            } catch (error) {
+                displayResult('backend-results', { error: error.message }, 'error');
+            }
+        }
+
+        async function testStatsEndpoint() {
+            try {
+                displayResult('backend-results', null, 'loading');
+                const response = await fetch(`${BACKEND_URL}/stats`);
+                const data = await response.json();
+                displayResult('backend-results', data, 'success');
+            } catch (error) {
+                displayResult('backend-results', { error: error.message }, 'error');
+            }
+            }
+
+        async function testFrontendAccess() {
+            try {
+                displayResult('frontend-results', null, 'loading');
+                const response = await fetch(FRONTEND_URL);
+                if (response.ok) {
+                    displayResult('frontend-results', { 
+                        status: 'Frontend accessible',
+                        url: FRONTEND_URL,
+                        statusCode: response.status 
+                    }, 'success');
+                } else {
+                    displayResult('frontend-results', { 
+                        error: 'Frontend not responding properly',
+                        statusCode: response.status 
+                    }, 'error');
+                }
+            } catch (error) {
+                displayResult('frontend-results', { error: error.message }, 'error');
+            }
+        }
+
+        async function testDataTransformation() {
+            try {
+                displayResult('frontend-results', null, 'loading');
+                
+                // Test the data transformation logic
+                const backendData = await fetch(`${BACKEND_URL}/wrestlers`).then(r => r.json());
+                const wrestlers = backendData.wrestlers;
+                
+                if (wrestlers && Object.keys(wrestlers).length > 0) {
+                    const firstWrestler = Object.values(wrestlers)[0];
+                    const transformedData = {
+                        id: firstWrestler.wrestler_id,
+                        name: firstWrestler.name,
+                        age: firstWrestler.parsed_data?.profile?.age || 'N/A',
+                        height: firstWrestler.parsed_data?.profile?.height || 'N/A',
+                        weight: firstWrestler.parsed_data?.profile?.weight || 'N/A',
+                        promotion: firstWrestler.parsed_data?.profile?.promotion || 'N/A',
+                        rating: firstWrestler.parsed_data?.profile?.average_rating || 'N/A'
+                    };
+                    
+                    displayResult('frontend-results', {
+                        message: 'Data transformation successful',
+                        originalFields: Object.keys(firstWrestler.parsed_data?.profile || {}),
+                        transformedData: transformedData
+                    }, 'success');
+                } else {
+                    displayResult('frontend-results', { error: 'No wrestler data found' }, 'error');
+                }
+            } catch (error) {
+                displayResult('frontend-results', { error: error.message }, 'error');
+            }
+        }
+
+        async function testCompleteFlow() {
+            try {
+                displayResult('integration-results', null, 'loading');
+                
+                // Test complete flow: Backend → Frontend → Display
+                const [health, wrestlers, stats] = await Promise.all([
+                    fetch(`${BACKEND_URL}/health`).then(r => r.json()),
+                    fetch(`${BACKEND_URL}/wrestlers`).then(r => r.json()),
+                    fetch(`${BACKEND_URL}/stats`).then(r => r.json())
+                ]);
+                
+                const integrationStatus = {
+                    backendHealth: health.status === 'healthy',
+                    wrestlersLoaded: wrestlers.wrestlers && Object.keys(wrestlers.wrestlers).length > 0,
+                    statsAvailable: stats.total_wrestlers > 0,
+                    totalWrestlers: stats.total_wrestlers,
+                    sampleWrestler: Object.values(wrestlers.wrestlers)[0]?.name || 'None'
+                };
+                
+                displayResult('integration-results', {
+                    message: 'Complete integration test successful',
+                    status: integrationStatus,
+                    summary: `System is ${integrationStatus.backendHealth && integrationStatus.wrestlersLoaded ? 'FULLY OPERATIONAL' : 'PARTIALLY WORKING'}`
+                }, 'success');
+                
+            } catch (error) {
+                displayResult('integration-results', { error: error.message }, 'error');
+            }
+        }
+
+        async function testErrorHandling() {
+            try {
+                displayResult('integration-results', null, 'loading');
+                
+                // Test error handling with invalid endpoint
+                const response = await fetch(`${BACKEND_URL}/invalid-endpoint`);
+                if (response.status === 404) {
+                    displayResult('integration-results', {
+                        message: 'Error handling working correctly',
+                        expectedError: '404 Not Found',
+                        actualStatus: response.status
+                    }, 'success');
+                } else {
+                    displayResult('integration-results', {
+                        message: 'Unexpected response from invalid endpoint',
+                        status: response.status
+                    }, 'error');
+                }
+            } catch (error) {
+                displayResult('integration-results', {
+                    message: 'Error handling working correctly',
+                    error: error.message
+                }, 'success');
+            }
+        }
+
+        async function loadLiveData() {
+            try {
+                displayResult('live-data', null, 'loading');
+                
+                const [wrestlers, stats] = await Promise.all([
+                    fetch(`${BACKEND_URL}/wrestlers`).then(r => r.json()),
+                    fetch(`${BACKEND_URL}/stats`).then(r => r.json())
+                ]);
+                
+                const liveData = {
+                    timestamp: new Date().toISOString(),
+                    databaseStats: stats,
+                    wrestlers: Object.keys(wrestlers.wrestlers || {}).map(id => ({
+                        id: id,
+                        name: wrestlers.wrestlers[id].name,
+                        rating: wrestlers.wrestlers[id].parsed_data?.profile?.average_rating || 'N/A'
+                    }))
+                };
+                
+                displayResult('live-data', liveData, 'success');
+                
+            } catch (error) {
+                displayResult('live-data', { error: error.message }, 'error');
+            }
+        }
+
+        // Auto-run basic tests on page load
+        window.onload = function() {
+            setTimeout(() => {
+                testBackendHealth();
+                testFrontendAccess();
+            }, 1000);
+        };
+    </script>
+</body>
+</html>

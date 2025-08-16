@@ -106,6 +106,7 @@ class ApiService {
         nickname: profile.nicknames?.[0] || wrestler.nicknames?.[0] || '',
         realName: wrestler.real_name || wrestler.name,
         image: imageUrl,
+        image_url: imageUrl,
         age: profile.age_numeric || parseInt(profile.age) || wrestler.age_numeric || 0,
         height: profile.height || wrestler.height || 'Unknown',
         weight: profile.weight || wrestler.weight || 'Unknown',
@@ -135,7 +136,6 @@ class ApiService {
         alterEgos: profile.alter_egos || wrestler.alter_egos,
         roles: profile.roles || wrestler.roles,
         // Image fields from backend
-        image_url: wrestler.image_url,
         image_source: wrestler.image_source,
         image_width: wrestler.image_width,
         image_height: wrestler.image_height,

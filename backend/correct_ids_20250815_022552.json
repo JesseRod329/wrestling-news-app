@@ -1,0 +1,212 @@
+{
+  "metadata": {
+    "created_at": "2025-08-15T02:25:52.954488",
+    "total_found": 34
+  },
+  "wrestlers": {
+    "Roman Reigns": {
+      "name": "Roman Reigns",
+      "cagematch_id": "9967",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=9967"
+    },
+    "Cody Rhodes": {
+      "name": "Cody Rhodes",
+      "cagematch_id": "3686",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=3686"
+    },
+    "Seth Rollins": {
+      "name": "Seth Rollins",
+      "cagematch_id": "2250",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=2250"
+    },
+    "Bianca Belair": {
+      "name": "Bianca Belair",
+      "cagematch_id": "18242",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=18242"
+    },
+    "Rhea Ripley": {
+      "name": "Rhea Ripley",
+      "cagematch_id": "16519",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=16519"
+    },
+    "Kenny Omega": {
+      "name": "Kenny Omega",
+      "cagematch_id": "2906",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=2906"
+    },
+    "MJF": {
+      "name": "MJF",
+      "cagematch_id": "17012",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=17012"
+    },
+    "Kazuchika Okada": {
+      "name": "Kazuchika Okada",
+      "cagematch_id": "4324",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=4324"
+    },
+    "Will Ospreay": {
+      "name": "Will Ospreay",
+      "cagematch_id": "14028",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=14028"
+    },
+    "Brock Lesnar": {
+      "name": "Brock Lesnar",
+      "cagematch_id": "669",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=669"
+    },
+    "John Cena": {
+      "name": "John Cena",
+      "cagematch_id": "691",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=691"
+    },
+    "The Rock": {
+      "name": "The Rock",
+      "cagematch_id": "960",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=960"
+    },
+    "Stone Cold Steve Austin": {
+      "name": "Stone Cold Steve Austin",
+      "cagematch_id": "635",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=635"
+    },
+    "Hulk Hogan": {
+      "name": "Hulk Hogan",
+      "cagematch_id": "504",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=504"
+    },
+    "Ric Flair": {
+      "name": "Ric Flair",
+      "cagematch_id": "1091",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=1091"
+    },
+    "Shawn Michaels": {
+      "name": "Shawn Michaels",
+      "cagematch_id": "796",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=796"
+    },
+    "Bret Hart": {
+      "name": "Bret Hart",
+      "cagematch_id": "565",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=565"
+    },
+    "Undertaker": {
+      "name": "Undertaker",
+      "cagematch_id": "761",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=761"
+    },
+    "Triple H": {
+      "name": "Triple H",
+      "cagematch_id": "496",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=496"
+    },
+    "Randy Orton": {
+      "name": "Randy Orton",
+      "cagematch_id": "998",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=998"
+    },
+    "Edge": {
+      "name": "Edge",
+      "cagematch_id": "932",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=932"
+    },
+    "Christian": {
+      "name": "Christian",
+      "cagematch_id": "820",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=820"
+    },
+    "Jeff Hardy": {
+      "name": "Jeff Hardy",
+      "cagematch_id": "891",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=891"
+    },
+    "Matt Hardy": {
+      "name": "Matt Hardy",
+      "cagematch_id": "99",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=99"
+    },
+    "CM Punk": {
+      "name": "CM Punk",
+      "cagematch_id": "80",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=80"
+    },
+    "Daniel Bryan": {
+      "name": "Daniel Bryan",
+      "cagematch_id": "86",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=86"
+    },
+    "AJ Styles": {
+      "name": "AJ Styles",
+      "cagematch_id": "801",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=801"
+    },
+    "Samoa Joe": {
+      "name": "Samoa Joe",
+      "cagematch_id": "676",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=676"
+    },
+    "Shinsuke Nakamura": {
+      "name": "Shinsuke Nakamura",
+      "cagematch_id": "56",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=56"
+    },
+    "Finn Balor": {
+      "name": "Finn Balor",
+      "cagematch_id": "2742",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=2742"
+    },
+    "Kevin Owens": {
+      "name": "Kevin Owens",
+      "cagematch_id": "1499",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=1499"
+    },
+    "Sami Zayn": {
+      "name": "Sami Zayn",
+      "cagematch_id": "1523",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=1523"
+    },
+    "Bobby Lashley": {
+      "name": "Bobby Lashley",
+      "cagematch_id": "1194",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=1194"
+    },
+    "Drew McIntyre": {
+      "name": "Drew McIntyre",
+      "cagematch_id": "2879",
+      "score": 1.0,
+      "profile_url": "https://www.cagematch.net/?id=2&nr=2879"
+    }
+  }
+}

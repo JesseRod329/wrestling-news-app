@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Frontend Test - Wrestling Stats</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d1b1b 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            background: rgba(38, 28, 28, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #382929;
+        }
+        .test-title {
+            color: #e9242a;
+            font-size: 24px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e9242a;
+            padding-bottom: 10px;
+        }
+        .test-result {
+            background: #382929;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #e9242a;
+        }
+        .success { border-left-color: #10b981; }
+        .error { border-left-color: #ef4444; }
+        .info { border-left-color: #3b82f6; }
+        .button {
+            background: #e9242a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .button:hover {
+            background: #d11a1a;
+        }
+        .wrestler-card {
+            background: #261c1c;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #382929;
+        }
+        .wrestler-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e9242a;
+            margin-bottom: 10px;
+        }
+        .wrestler-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .detail-item {
+            background: #382929;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        .detail-label {
+            color: #b89d9e;
+            font-weight: bold;
+        }
+        .detail-value {
+            color: white;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #261c1c;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #382929;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e9242a;
+        }
+        .stat-label {
+            color: #b89d9e;
+            font-size: 14px;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #b89d9e;
+        }
+        .error-message {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; color: #e9242a; margin-bottom: 30px;">
+            🏆 Enhanced Wrestling Frontend Test
+        </h1>
+        
+        <div class="test-section">
+            <div class="test-title">🔍 Database Connection Test</div>
+            <button class="button" onclick="testDatabaseConnection()">Test Backend Connection</button>
+            <div id="connection-result"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">📊 Database Statistics</div>
+            <button class="button" onclick="loadDatabaseStats()">Load Database Stats</button>
+            <div id="stats-result"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">👥 Wrestler Data Test</div>
+            <button class="button" onclick="loadAllWrestlers()">Load All Wrestlers</button>
+            <button class="button" onclick="testEnhancedData()">Test Enhanced Data</button>
+            <div id="wrestlers-result"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">🔍 Search Functionality Test</div>
+            <input type="text" id="search-input" placeholder="Search wrestlers..." style="padding: 10px; margin: 10px; border-radius: 5px; border: 1px solid #382929; background: #382929; color: white; width: 200px;">
+            <button class="button" onclick="testSearch()">Search</button>
+            <div id="search-result"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">🏆 Individual Wrestler Profile Test</div>
+            <button class="button" onclick="testWrestlerProfile('3686')">Test Cody Rhodes Profile</button>
+            <button class="button" onclick="testWrestlerProfile('1')">Test Hulk Hogan Profile</button>
+            <div id="profile-result"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">📈 Advanced Features Test</div>
+            <button class="button" onclick="testAdvancedFeatures()">Test Advanced Features</button>
+            <div id="advanced-result"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5001/api';
+
+        // Test database connection
+        async function testDatabaseConnection() {
+            const resultDiv = document.getElementById('connection-result');
+            resultDiv.innerHTML = '<div class="loading">Testing connection...</div>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                
+                if (response.ok && data.status === 'healthy') {
+                    resultDiv.innerHTML = `
+                        <div class="test-result success">
+                            ✅ Backend connection successful!<br>
+                            Status: ${data.status}<br>
+                            Database loaded: ${data.database_loaded}<br>
+                            Timestamp: ${data.timestamp}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="test-result error">
+                            ❌ Backend connection failed<br>
+                            Status: ${data.status || 'Unknown'}<br>
+                            Response: ${JSON.stringify(data)}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="test-result error">
+                        ❌ Connection error: ${error.message}<br>
+                        Make sure the backend is running on port 5001
+                    </div>
+                `;
+            }
+        }
+
+        // Load database statistics
+        async function loadDatabaseStats() {
+            const resultDiv = document.getElementById('stats-result');
+            resultDiv.innerHTML = '<div class="loading">Loading database statistics...</div>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/stats`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="test-result success">
+                            <h3>📊 Database Statistics</h3>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-value">${data.total_wrestlers || 'N/A'}</div>
+                                    <div class="stat-label">Total Wrestlers</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">${data.average_rating || 'N/A'}</div>
+                                    <div class="stat-label">Average Rating</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">${data.total_ratings || 'N/A'}</div>
+                                    <div class="stat-label">Total Ratings</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">${Object.keys(data.promotions || {}).length}</div>
+                                    <div class="stat-label">Promotions</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 15px;">
+                                <strong>Database File:</strong> ${data.database_file}<br>
+                                <strong>Last Updated:</strong> ${data.last_updated || 'N/A'}<br>
+                                <strong>Promotions:</strong> ${JSON.stringify(data.promotions || {})}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="test-result error">
+                            ❌ Failed to load statistics: ${JSON.stringify(data)}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="test-result error">
+                        ❌ Error loading statistics: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Load all wrestlers
+        async function loadAllWrestlers() {
+            const resultDiv = document.getElementById('wrestlers-result');
+            resultDiv.innerHTML = '<div class="loading">Loading all wrestlers...</div>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/wrestlers`);
+                const data = await response.json();
+                
+                if (response.ok && data.wrestlers) {
+                    const wrestlersHtml = data.wrestlers.map(wrestler => `
+                        <div class="wrestler-card">
+                            <div class="wrestler-name">${wrestler.name}</div>
+                            <div class="wrestler-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">ID:</div>
+                                    <div class="detail-value">${wrestler.wrestler_id}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Rating:</div>
+                                    <div class="detail-value">${wrestler.parsed_data?.profile?.average_rating || 'N/A'}/10</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Promotion:</div>
+                                    <div class="detail-value">${wrestler.parsed_data?.profile?.promotion || 'N/A'}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Championships:</div>
+                                    <div class="detail-value">${wrestler.parsed_data?.championships?.length || 0}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Career Highlights:</div>
+                                    <div class="detail-value">${wrestler.parsed_data?.career_highlights?.length || 0}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Notable Feuds:</div>
+                                    <div class="detail-value">${wrestler.parsed_data?.notable_feuds?.length || 0}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    resultDiv.innerHTML = `
+                        <div class="test-result success">
+                            <h3>👥 All Wrestlers (${data.total})</h3>
+                            ${wrestlersHtml}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="test-result error">
+                            ❌ Failed to load wrestlers: ${JSON.stringify(data)}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="test-result error">
+                        ❌ Error loading wrestlers: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Test enhanced data features
+        async function testEnhancedData() {
+            const resultDiv = document.getElementById('wrestlers-result');
+            resultDiv.innerHTML = '<div class="loading">Testing enhanced data features...</div>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/wrestlers`);
+                const data = await response.json();
+                
+                if (response.ok && data.wrestlers) {
+                    const enhancedFeatures = [];
+                    
+                    data.wrestlers.forEach(wrestler => {
+                        const features = [];
+                        if (wrestler.parsed_data?.championships?.length > 0) features.push('Championships');
+                        if (wrestler.parsed_data?.career_highlights?.length > 0) features.push('Career Highlights');
+                        if (wrestler.parsed_data?.notable_feuds?.length > 0) features.push('Notable Feuds');
+                        if (wrestler.parsed_data?.physical_attributes) features.push('Physical Attributes');
+                        if (wrestler.parsed_data?.personal_info) features.push('Personal Info');
+                        
+                        if (features.length > 0) {
+                            enhancedFeatures.push(`${wrestler.name}: ${features.join(', ')}`);
+                        }
+                    });
+                    
+                    resultDiv.innerHTML = `
+                        <div class="test-result success">
+                            <h3>✨ Enhanced Data Features</h3>
+                            <p><strong>Total wrestlers with enhanced data:</strong> ${enhancedFeatures.length}</p>
+                            <div style="background: #382929; padding: 15px; border-radius: 5px; margin-top: 10px;">
+                                ${enhancedFeatures.map(feature => `<div style="margin: 5px 0;">• ${feature}</div>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="test-result error">
+                        ❌ Error testing enhanced data: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Test search functionality
+        async function testSearch() {
+            const query = document.getElementById('search-input').value.trim();
+            if (!query) {
+                alert('Please enter a search term');
+                return;
+            }
+            
+            const resultDiv = document.getElementById('search-result');
+            resultDiv.innerHTML = '<div class="loading">Searching...</div>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/search?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                
+                if (response.ok && data.results) {
+                    const resultsHtml = data.results.map(wrestler => `
+                        <div class="wrestler-card">
+                            <div class="wrestler-name">${wrestler.name}</div>
+                            <div class="wrestler-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Rating:</div>
+                                    <div class="detail-value">${wrestler.parsed_data?.profile?.average_rating || 'N/A'}/10</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Promotion:</div>
+                                    <div class="detail-value">${wrestler.parsed_data?.profile?.promotion || 'N/A'}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    resultDiv.innerHTML = `
+                        <div class="test-result success">
+                            <h3>🔍 Search Results for "${query}"</h3>
+                            <p><strong>Found:</strong> ${data.total_found} wrestlers</p>
+                            ${resultsHtml}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="test-result error">
+                            ❌ Search failed: ${JSON.stringify(data)}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="test-result error">
+                        ❌ Search error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Test individual wrestler profile
+        async function testWrestlerProfile(wrestlerId) {
+            const resultDiv = document.getElementById('profile-result');
+            resultDiv.innerHTML = '<div class="loading">Loading wrestler profile...</div>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/wrestlers/${wrestlerId}`);
+                const wrestler = await response.json();
+                
+                if (response.ok && wrestler.name) {
+                    const profileHtml = `
+                        <div class="wrestler-card">
+                            <div class="wrestler-name">${wrestler.name}</div>
+                            <div class="wrestler-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">ID:</div>
+                                    <div class="detail-value">${wrestler.wrestler_id}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Age:</div>
+                                    <div class="detail-value">${wrestler.parsed_data?.profile?.age || 'N/A'} years</div>
+                                </div>
+                                <div class="detail-label">Height:</div>
+                                <div class="detail-value">${wrestler.parsed_data?.profile?.height || 'N/A'}</div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Weight:</div>
+                                    <div class="detail-value">${wrestler.parsed_data?.profile?.weight || 'N/A'}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Rating:</div>
+                                    <div class="detail-value">${wrestler.parsed_data?.profile?.average_rating || 'N/A'}/10</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Experience:</div>
+                                    <div class="detail-value">${wrestler.parsed_data?.profile?.experience || 'N/A'}</div>
+                                </div>
+                            </div>
+                            
+                            ${wrestler.parsed_data?.championships?.length > 0 ? `
+                                <div style="margin-top: 15px;">
+                                    <div class="detail-label">🏆 Championships:</div>
+                                    <div style="background: #382929; padding: 10px; border-radius: 5px; margin-top: 5px;">
+                                        ${wrestler.parsed_data.championships.map(champ => `<div style="margin: 3px 0;">• ${champ}</div>`).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${wrestler.parsed_data?.career_highlights?.length > 0 ? `
+                                <div style="margin-top: 15px;">
+                                    <div class="detail-label">⭐ Career Highlights:</div>
+                                    <div style="background: #382929; padding: 10px; border-radius: 5px; margin-top: 5px;">
+                                        ${wrestler.parsed_data.career_highlights.map(highlight => `<div style="margin: 3px 0;">• ${highlight}</div>`).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="test-result success">
+                            <h3>👤 Wrestler Profile</h3>
+                            ${profileHtml}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="test-result error">
+                            ❌ Failed to load profile: ${JSON.stringify(wrestler)}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="test-result error">
+                        ❌ Error loading profile: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Test advanced features
+        async function testAdvancedFeatures() {
+            const resultDiv = document.getElementById('advanced-result');
+            resultDiv.innerHTML = '<div class="loading">Testing advanced features...</div>';
+            
+            try {
+                // Test top-rated wrestlers
+                const topRatedResponse = await fetch(`${API_BASE}/top-rated`);
+                const topRatedData = await topRatedResponse.json();
+                
+                // Test promotions
+                const promotionsResponse = await fetch(`${API_BASE}/promotions/World Wrestling Entertainment`);
+                const promotionsData = await promotionsResponse.json();
+                
+                let advancedHtml = '<div class="test-result success"><h3>🚀 Advanced Features Test</h3>';
+                
+                if (topRatedResponse.ok && topRatedData.wrestlers) {
+                    advancedHtml += `
+                        <div style="margin: 15px 0;">
+                            <h4>🏆 Top Rated Wrestlers</h4>
+                            <div style="background: #382929; padding: 10px; border-radius: 5px;">
+                                ${topRatedData.wrestlers.slice(0, 5).map(w => 
+                                    `<div style="margin: 5px 0;">• ${w.name} - ${w.parsed_data?.profile?.average_rating || 'N/A'}/10</div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                if (promotionsResponse.ok && promotionsData.wrestlers) {
+                    advancedHtml += `
+                        <div style="margin: 15px 0;">
+                            <h4>🏢 WWE Wrestlers</h4>
+                            <div style="background: #382929; padding: 10px; border-radius: 5px;">
+                                <strong>Total:</strong> ${promotionsData.total} wrestlers<br>
+                                <strong>Sample:</strong> ${promotionsData.wrestlers.slice(0, 3).map(w => w.name).join(', ')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                advancedHtml += '</div>';
+                resultDiv.innerHTML = advancedHtml;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="test-result error">
+                        ❌ Error testing advanced features: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Auto-run connection test on page load
+        window.onload = function() {
+            testDatabaseConnection();
+        };
+    </script>
+</body>
+</html>
